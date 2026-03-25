@@ -30,3 +30,32 @@ blocks:
           commands:
             - cd 1-tdd && python -m pytest test_factorial.py -v
             - cd 2-unit-testing && python -m pytest test_math_sum.py -v
+  - name: Run Integration Tests
+    dependencies:
+      - "\U0001F680 Deploy"
+    task:
+      jobs:
+        - name: Run Integration Tests
+          commands:
+            - 'cd 3-integration-testing && python -m pytest test_integration.py -v '
+            - cd 6-mocking && python -m pytest test_weather_service.py -v
+  - name: Run End-to-End Tests
+    dependencies:
+      - Run Integration Tests
+    task:
+      jobs:
+        - name: Run End-to-End Tests
+          commands:
+            - 'cd 4-e2e && nohup python app.py & '
+            - 'sleep 3 '
+            - python -m pytest test_e2e.py -v
+  - name: Run Test Coverage
+    dependencies:
+      - Run End-to-End Tests
+    task:
+      jobs:
+        - name: Run Test Coverage
+          commands:
+            - 'cd 7-test-coverage '
+            - 'coverage run -m pytest test_calculator.py -v '
+            - coverage report -m
