@@ -37,8 +37,8 @@ blocks:
       jobs:
         - name: Run Unit Tests
           commands:
-            - cd 1-tdd && python -m pytest test_factorial.py -v
-            - cd 2-unit-testing && python -m pytest test_math_sum.py -v
+            - (cd 1-tdd && python -m pytest test_factorial.py -v)
+            - (cd 2-unit-testing && python -m pytest test_math_sum.py -v)
   - name: Run Integration Tests
     dependencies:
       - Run Unit Tests
@@ -51,8 +51,8 @@ blocks:
       jobs:
         - name: Run Integration Tests
           commands:
-            - 'cd 3-integration-testing && python -m pytest test_integration.py -v '
-            - cd 6-mocking && python -m pytest test_weather_service.py -v
+            - (cd 3-integration-testing && python -m pytest test_integration.py -v)
+            - (cd 6-mocking && python -m pytest test_weather_service.py -v)
   - name: Run End-to-End Tests
     dependencies:
       - Run Integration Tests
@@ -65,9 +65,9 @@ blocks:
       jobs:
         - name: Run End-to-End Tests
           commands:
-            - 'cd 4-e2e && nohup python app.py & '
-            - 'sleep 3 '
-            - cd 4-e2e && python -m pytest test_e2e.py -v
+            - 'cd 4-e2e && nohup python app.py &'
+            - sleep 3
+            - (cd 4-e2e && python -m pytest test_e2e.py -v)
   - name: Run Test Coverage
     dependencies:
       - Run End-to-End Tests
@@ -80,8 +80,8 @@ blocks:
       jobs:
         - name: Run Test Coverage
           commands:
-            - cd 7-test-coverage && coverage run -m pytest test_calculator.py -v
-            - cd 7-test-coverage && coverage report -m
+            - (cd 7-test-coverage && coverage run -m pytest test_calculator.py -v)
+            - (cd 7-test-coverage && coverage report -m)
   - name: Run Test Reports
     dependencies:
       - Run Test Coverage
@@ -94,9 +94,9 @@ blocks:
       jobs:
         - name: Run Test Reports
           commands:
-            - cd 5-test-reports && pip install -r requirements.txt
-            - cd 5-test-reports && pytest --junitxml=reports.xml
-            - 'cd 5-test-reports && [[ -f reports.xml ]] && test-results publish reports.xml'
+            - (cd 5-test-reports && pip install -r requirements.txt)
+            - (cd 5-test-reports && pytest --junitxml=reports.xml)
+            - '(cd 5-test-reports && [[ -f reports.xml ]] && test-results publish reports.xml)'
 after_pipeline:
   task:
     jobs:
