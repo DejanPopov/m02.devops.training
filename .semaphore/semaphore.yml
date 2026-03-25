@@ -17,10 +17,8 @@ blocks:
     dependencies: []
     task:
       jobs:
-        - name: "\U0001F7E2 Run Tests"
+        - name: Install python dependencies
           commands:
-            - python -m venv .venv
-            - 'cache store venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master .venv'
             - pip install pytest requests flask coverage locust
             - 'export PATH=$PATH:/home/semaphore/.local/bin'
   - name: "\U0001F680 Deploy"
