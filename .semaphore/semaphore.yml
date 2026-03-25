@@ -20,6 +20,7 @@ blocks:
         - name: "\U0001F7E2 Run Tests"
           commands:
             - pip install pytest requests flask coverage locust
+            - 'export PATH=$PATH:/home/semaphore/.local/bin '
   - name: "\U0001F680 Deploy"
     dependencies:
       - Install dependencies
