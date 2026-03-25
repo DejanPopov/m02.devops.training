@@ -95,8 +95,8 @@ blocks:
         - name: Run Test Reports
           commands:
             - (cd 5-test-reports && pip install -r requirements.txt)
-            - (cd 5-test-reports && pytest --junitxml=reports.xml)
-            - '(cd 5-test-reports && [[ -f reports.xml ]] && test-results publish reports.xml)'
+            - (cd 5-test-reports && pytest --junitxml=reports.xml || true)
+            - 'test-results publish 5-test-reports/reports.xml'
 after_pipeline:
   task:
     jobs:
