@@ -16,11 +16,23 @@ global_job_config:
   prologue:
     commands:
       - checkout
-      - pip install pytest requests flask coverage locust
-      - 'export PATH=$PATH:/home/semaphore/.local/bin'
+      - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+      - source .venv/bin/activate
 blocks:
-  - name: Run Unit Tests
+  - name: Install dependencies
     dependencies: []
+    task:
+      jobs:
+        - name: Install python dependencies
+          commands:
+            - checkout
+            - python -m venv .venv
+            - source .venv/bin/activate
+            - pip install pytest requests flask coverage locust
+            - 'cache store venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master .venv'
+  - name: Run Unit Tests
+    dependencies:
+      - Install dependencies
     task:
       jobs:
         - name: Run Unit Tests
