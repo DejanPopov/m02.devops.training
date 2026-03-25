@@ -12,24 +12,19 @@ auto_cancel:
     when: branch != 'main'
   queued:
     when: branch = 'main'
+global_job_config:
+  prologue:
+    commands:
+      - checkout
+      - pip install pytest requests flask coverage locust
+      - 'export PATH=$PATH:/home/semaphore/.local/bin'
 blocks:
-  - name: Install dependencies
-    dependencies: []
-    task:
-      jobs:
-        - name: Install python dependencies
-          commands:
-            - checkout
-            - pip install pytest requests flask coverage locust
-            - 'export PATH=$PATH:/home/semaphore/.local/bin'
   - name: Run Unit Tests
-    dependencies:
-      - Install dependencies
+    dependencies: []
     task:
       jobs:
         - name: Run Unit Tests
           commands:
-            - checkout
             - cd 1-tdd && python -m pytest test_factorial.py -v
             - cd 2-unit-testing && python -m pytest test_math_sum.py -v
   - name: Run Integration Tests
@@ -39,7 +34,6 @@ blocks:
       jobs:
         - name: Run Integration Tests
           commands:
-            - checkout
             - 'cd 3-integration-testing && python -m pytest test_integration.py -v '
             - cd 6-mocking && python -m pytest test_weather_service.py -v
   - name: Run End-to-End Tests
@@ -49,7 +43,6 @@ blocks:
       jobs:
         - name: Run End-to-End Tests
           commands:
-            - checkout
             - 'cd 4-e2e && nohup python app.py & '
             - 'sleep 3 '
             - cd 4-e2e && python -m pytest test_e2e.py -v
@@ -60,7 +53,6 @@ blocks:
       jobs:
         - name: Run Test Coverage
           commands:
-            - checkout
             - cd 7-test-coverage && coverage run -m pytest test_calculator.py -v
             - cd 7-test-coverage && coverage report -m
   - name: Run Test Reports
@@ -70,7 +62,6 @@ blocks:
       jobs:
         - name: Run Test Reports
           commands:
-            - checkout
             - cd 5-test-reports && pip install -r requirements.txt
             - cd 5-test-reports && pytest --junitxml=reports.xml
             - 'cd 5-test-reports && [[ -f reports.xml ]] && test-results publish reports.xml'
