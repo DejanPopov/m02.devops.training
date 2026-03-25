@@ -95,8 +95,8 @@ blocks:
         always:
           commands:
             - 'test-results publish 5-test-reports/reports.xml || true'
-            - 'python 5-test-reports/generate_report.py 5-test-reports/reports.xml > REPORT.md && cat REPORT.md || true'
-            - '[[ -f REPORT.md ]] && artifact push workflow -f -d .semaphore/REPORT.md REPORT.md || true'
+            - 'python 5-test-reports/generate_report.py 5-test-reports/reports.xml > REPORT.md || true'
+            - 'artifact push job -f REPORT.md || true'
       jobs:
         - name: Run Test Reports
           commands:
@@ -108,3 +108,5 @@ after_pipeline:
       - name: After pipeline job
         commands:
           - 'test-results gen-pipeline-report'
+          - 'artifact pull job REPORT.md -j "Run Test Reports" -p "Run Test Reports" || true'
+          - 'artifact push workflow -f -d .semaphore/REPORT.md REPORT.md || true'
