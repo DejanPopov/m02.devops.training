@@ -12,12 +12,6 @@ auto_cancel:
     when: branch != 'main'
   queued:
     when: branch = 'main'
-global_job_config:
-  prologue:
-    commands:
-      - checkout
-      - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
-      - source .venv/bin/activate
 blocks:
   - name: Install dependencies
     dependencies: []
@@ -34,6 +28,11 @@ blocks:
     dependencies:
       - Install dependencies
     task:
+      prologue:
+        commands:
+          - checkout
+          - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+          - source .venv/bin/activate
       jobs:
         - name: Run Unit Tests
           commands:
@@ -43,6 +42,11 @@ blocks:
     dependencies:
       - Run Unit Tests
     task:
+      prologue:
+        commands:
+          - checkout
+          - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+          - source .venv/bin/activate
       jobs:
         - name: Run Integration Tests
           commands:
@@ -52,6 +56,11 @@ blocks:
     dependencies:
       - Run Integration Tests
     task:
+      prologue:
+        commands:
+          - checkout
+          - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+          - source .venv/bin/activate
       jobs:
         - name: Run End-to-End Tests
           commands:
@@ -62,6 +71,11 @@ blocks:
     dependencies:
       - Run End-to-End Tests
     task:
+      prologue:
+        commands:
+          - checkout
+          - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+          - source .venv/bin/activate
       jobs:
         - name: Run Test Coverage
           commands:
@@ -71,6 +85,11 @@ blocks:
     dependencies:
       - Run Test Coverage
     task:
+      prologue:
+        commands:
+          - checkout
+          - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
+          - source .venv/bin/activate
       jobs:
         - name: Run Test Reports
           commands:
