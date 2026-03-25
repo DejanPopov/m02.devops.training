@@ -91,15 +91,19 @@ blocks:
           - checkout
           - 'cache restore venv-$SEMAPHORE_WORKFLOW_ID,venv-$SEMAPHORE_BRANCH,venv-master'
           - source .venv/bin/activate
+      epilogue:
+        always:
+          commands:
+            - 'test-results publish 5-test-reports/reports.xml || true'
       jobs:
         - name: Run Test Reports
           commands:
             - (cd 5-test-reports && pip install -r requirements.txt)
-            - (cd 5-test-reports && pytest --junitxml=reports.xml || true)
-            - 'test-results publish 5-test-reports/reports.xml'
+            - (cd 5-test-reports && pytest --junitxml=reports.xml)
 after_pipeline:
   task:
     jobs:
       - name: After pipeline job
         commands:
-          - 'test-results gen-pipeline-report '
+          - 'test-results gen-pipeline-report'
+          - 'artifact push workflow 5-test-reports/reports.xml -d reports.xml'
